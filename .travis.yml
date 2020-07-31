@@ -15,7 +15,7 @@ after_success:
     - docker build -t container2cloud/complex-server ./server
     - docker build -t container2cloud/complex-worker ./worker
     # log in to the docker CLI
-    - echo '$DOCKER_PASSWORD' | docker login -u '$DOCKER_ID' --password-stdin
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
     # Take those images and phsh them to docker hub
     - docker push container2cloud/complex-client
     - docker push container2cloud/complex-nginx
