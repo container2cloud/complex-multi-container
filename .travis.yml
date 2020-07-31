@@ -1,0 +1,23 @@
+language: generic
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t container2cloud/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run -e CI=true container2cloud/react-test npm test
+
+after_success:
+    - docker build -t container2cloud/complex-client ./client
+    - docker build -t container2cloud/complex-nginx ./nginx
+    - docker build -t container2cloud/complex-server ./server
+    - docker build -t container2cloud/complex-worker ./worker
+    # log in to the docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # Take those images and phsh them to docker hub
+    - docker push container2cloud/complex-client
+    - docker push container2cloud/complex-nginx
+    - docker push container2cloud/complex-server
+    - docker push container2cloud/complex-worker
